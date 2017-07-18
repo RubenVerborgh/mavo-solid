@@ -4,6 +4,11 @@ const _ = Mavo.Backend.register($.Class({
 	id: 'Solid',
 	constructor: function () {
 		console.log(`Solid: created backend from ${this.source} for ${this.mavo.id}.`);
+		this.permissions.on(['login', 'read']);
+	},
+
+	get: function () {
+		return Promise.resolve({});
 	},
 
 	static: {
