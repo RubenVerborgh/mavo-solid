@@ -3,12 +3,12 @@ const _ = Mavo.Backend.register($.Class({
 	extends: Mavo.Backend,
 	id: 'Solid',
 	constructor: function () {
-		console.log(`Solid: created backend from ${this.source} for ${this.mavo.id}.`);
+		// Allow logging in and reading by default
 		this.permissions.on(['login', 'read']);
-	},
 
-	get: function () {
-		return Promise.resolve({});
+		// Construct the application's data URL
+		const extension = this.format.constructor.extensions[0] || '.json';
+		this.url = this.source.replace(/\/?$/, `/${this.mavo.id}${extension}`);
 	},
 
 	static: {
