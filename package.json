@@ -1,0 +1,20 @@
+{
+  "name": "mavo-solid",
+  "version": "0.1.0",
+  "description": "A Solid storage backend for Mavo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solid/mavo-solid.git"
+  },
+  "keywords": [
+    "mavo",
+    "solid",
+    "decentralized"
+  ],
+  "author": "Ruben Verborgh <ruben@verborgh.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/solid/mavo-solid/issues"
+  },
+  "homepage": "https://github.com/solid/mavo-solid#readme"
+}
