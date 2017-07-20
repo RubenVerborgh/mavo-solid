@@ -1,14 +1,38 @@
-(function ($) {
+(function ($, solid) {
 const _ = Mavo.Backend.register($.Class({
 	extends: Mavo.Backend,
 	id: 'Solid',
 	constructor: function () {
-		// Allow logging in and reading by default
-		this.permissions.on(['login', 'read']);
-
 		// Construct the application's data URL
 		const extension = this.format.constructor.extensions[0] || '.json';
 		this.url = this.source.replace(/\/?$/, `/${this.mavo.id}${extension}`);
+
+		// Allow logging in and reading by default
+		this.permissions.on(['login', 'read']);
+		// Check if the user happens to be logged in
+		this.login(true);
+	},
+
+	login: function (passive) {
+		const auth = passive ? solid.currentSession() : solid.login(this.url);
+		return auth.then(({ session })  => {
+			if (!session)
+				return this.logout();
+			this.user = {
+				url: session.webId,
+				username: session.webId,
+				// TODO: add real name (https://github.com/solid/mavo-solid/issues/5)
+				name: session.webId,
+			};
+			this.permissions.on(['logout']);
+		});
+	},
+
+	logout: function () {
+		return solid.logout().then(() => {
+			this.user = null;
+			this.permissions.on('login');
+		});
 	},
 
 	get: function (url) {
@@ -38,4 +62,4 @@ const _ = Mavo.Backend.register($.Class({
 		},
 	},
 }));
-})(Bliss);
+})(Bliss, SolidAuthClient);
