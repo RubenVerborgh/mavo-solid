@@ -11,6 +11,26 @@ const _ = Mavo.Backend.register($.Class({
 		this.url = this.source.replace(/\/?$/, `/${this.mavo.id}${extension}`);
 	},
 
+	get: function (url) {
+		const resource = this.super.get.call(this, url);
+		resource.then(() => {
+			// TODO: Read actual permissions (https://github.com/solid/mavo-solid/issues/3)
+			this.permissions.on(['edit', 'save']);
+		});
+		return resource;
+	},
+
+	put: function (serialized, url = this.url) {
+		return fetch(url, {
+			method: 'PUT',
+			body: serialized,
+			headers: {
+				// TODO: Set actual content type (https://github.com/solid/mavo-solid/issues/2)
+				'Content-Type': 'application/octet-stream',
+			},
+		});
+	},
+
 	static: {
 		test: function (source) {
 			// TODO: Add more reliable test (https://github.com/solid/mavo-solid/issues/1)
