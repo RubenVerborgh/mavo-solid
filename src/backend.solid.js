@@ -14,7 +14,7 @@ const _ = Mavo.Backend.register($.Class({
 	static: {
 		test: function (source) {
 			// TODO: Add more reliable test (https://github.com/solid/mavo-solid/issues/1)
-			return /^https:\/\/[^/]+\.databox\.me/.test(source);
+			return /^https:\/\/[^/]+\.(?:databox\.me|solidtest\.space)/.test(source);
 		},
 	},
 }));
