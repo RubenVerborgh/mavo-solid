@@ -41,17 +41,26 @@ const _ = Mavo.Backend.register($.Class({
 			// TODO: Read actual permissions (https://github.com/solid/mavo-solid/issues/3)
 			this.permissions.on(['edit', 'save']);
 		});
-		return request.then(response => response.text());
+		return this.authorize(request).then(response => response.text());
 	},
 
 	put: function (serialized, url = this.url) {
-		return solid.fetch(url, {
+		const request = solid.fetch(url, {
 			method: 'PUT',
 			body: serialized,
 			headers: {
 				// TODO: Set actual content type (https://github.com/solid/mavo-solid/issues/2)
 				'Content-Type': 'application/octet-stream',
 			},
+		});
+		return this.authorize(request);
+	},
+
+	authorize: function (request) {
+		return request.then(response => {
+			if (response.status === 401 || response.status === 403)
+				throw new Error('Not authorized to perform this action.');
+			return response;
 		});
 	},
 
