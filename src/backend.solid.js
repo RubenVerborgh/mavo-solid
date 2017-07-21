@@ -35,17 +35,17 @@ const _ = Mavo.Backend.register($.Class({
 		});
 	},
 
-	get: function (url) {
-		const resource = this.super.get.call(this, url);
-		resource.then(() => {
+	get: function (url = new URL(this.url)) {
+		const request = solid.fetch(url);
+		request.then(() => {
 			// TODO: Read actual permissions (https://github.com/solid/mavo-solid/issues/3)
 			this.permissions.on(['edit', 'save']);
 		});
-		return resource;
+		return request.then(response => response.text());
 	},
 
 	put: function (serialized, url = this.url) {
-		return fetch(url, {
+		return solid.fetch(url, {
 			method: 'PUT',
 			body: serialized,
 			headers: {
