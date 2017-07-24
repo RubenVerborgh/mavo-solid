@@ -1,4 +1,6 @@
-(function ($, solid) {
+const $ = Bliss;
+import * as solid from 'solid-auth-client';
+
 const _ = Mavo.Backend.register($.Class({
 	extends: Mavo.Backend,
 	id: 'Solid',
@@ -71,4 +73,3 @@ const _ = Mavo.Backend.register($.Class({
 		},
 	},
 }));
-})(Bliss, SolidAuthClient);
