@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-	entry: './src/backend.solid.js',
+	entry: './src/index.js',
 	output: {
 		filename: 'backend.solid.min.js',
 		path: path.resolve(__dirname, 'dist'),
@@ -24,6 +24,7 @@ module.exports = {
 		],
 	},
 	externals: {
+		'Mavo': 'Mavo',
 		'node-fetch': 'fetch',
 		'text-encoding': 'TextEncoder',
 		'urlutils': 'URL',

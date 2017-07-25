@@ -12,11 +12,6 @@
     node: true,
     es6: true,
   },
-  globals: {
-    Mavo: true,
-    Bliss: true,
-    SolidAuthClient: true,
-  },
   rules: {
     // Possible Errors
     comma-dangle: [2, "always-multiline"],
