@@ -1,5 +1,6 @@
 import { Backend } from 'Mavo';
 import * as solid from 'solid-auth-client';
+import loadProfile from './profile.js';
 
 export default class SolidBackend extends Backend {
 	id = 'Solid';
@@ -22,13 +23,10 @@ export default class SolidBackend extends Backend {
 		return auth.then(({ session })  => {
 			if (!session)
 				return this.logout();
-			this.user = {
-				url: session.webId,
-				username: session.webId,
-				// TODO: add real name (https://github.com/solid/mavo-solid/issues/5)
-				name: session.webId,
-			};
-			this.permissions.on(['logout']);
+			this.user = { url: session.webId };
+			this.loadProfile().then(() => {
+				this.permissions.on(['logout']);
+			});
 		});
 	}
 
@@ -66,6 +64,15 @@ export default class SolidBackend extends Backend {
 				throw new Error('Not authorized to perform this action.');
 			return response;
 		});
+	}
+
+	// Augments `this.user` with profile data (name, avatar)
+	loadProfile() {
+		const url = this.user.url;
+		return solid.fetch(url)
+			.then(res => Promise.all([res.text(), res.headers.get('Content-Type')]))
+			.then(([contents, contentType]) => loadProfile({ url, contents, contentType }))
+			.then(profile => Object.assign(this.user, profile));
 	}
 
 	static test(source) {

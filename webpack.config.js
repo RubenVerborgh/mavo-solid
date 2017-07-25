@@ -26,6 +26,10 @@ module.exports = {
 			},
 		],
 	},
+	node: {
+		fs: 'empty',
+		child_process: 'empty',
+	},
 	externals: {
 		'Mavo': 'Mavo',
 		'node-fetch': 'fetch',

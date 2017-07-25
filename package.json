@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/solid/mavo-solid#readme",
   "dependencies": {
+    "rdflib": "^0.15.0",
     "solid-auth-client": "^0.3.4"
   },
   "devDependencies": {
