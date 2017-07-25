@@ -2,9 +2,15 @@ import * as rdflib from 'rdflib';
 
 const PROFILE_QUERY = `
 	PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+	PREFIX solid: <http://www.w3.org/ns/solid/terms#>
+
 	SELECT * WHERE {
 		<URL> foaf:name ?name.
 		OPTIONAL { <URL> foaf:img ?avatar. }
+		OPTIONAL {
+			<URL> solid:account ?account.
+			?account foaf:name ?accountName.
+		}
 	}`;
 
 // Loads a user profile from the given WebID document

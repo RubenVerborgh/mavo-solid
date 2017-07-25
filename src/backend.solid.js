@@ -3,7 +3,7 @@ import * as solid from 'solid-auth-client';
 import loadProfile from './profile.js';
 
 export default class SolidBackend extends Backend {
-	id = 'Solid';
+	id = 'a Solid space';
 
 	constructor(url, options) {
 		super(url, options);
@@ -72,7 +72,12 @@ export default class SolidBackend extends Backend {
 		return solid.fetch(url)
 			.then(res => Promise.all([res.text(), res.headers.get('Content-Type')]))
 			.then(([contents, contentType]) => loadProfile({ url, contents, contentType }))
-			.then(profile => Object.assign(this.user, profile));
+			.then(profile => {
+				Object.assign(this.user, profile);
+				if (profile.accountName)
+					this.id = profile.accountName;
+				return profile;
+			});
 	}
 
 	static test(source) {
