@@ -1,11 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const PRODUCTION = process.env.NODE_ENV === 'production';
+
 module.exports = {
 	entry: './src/index.js',
 	output: {
 		filename: 'backend.solid.min.js',
 		path: path.resolve(__dirname, 'dist'),
+		publicPath: '/live/',
 	},
 	module: {
 		rules: [
@@ -30,8 +33,11 @@ module.exports = {
 		'urlutils': 'URL',
 		'@trust/webcrypto': 'crypto',
 	},
-	devtool: 'source-map',
+	devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
+		new webpack.optimize.UglifyJsPlugin({
+			sourceMap: true,
+			minimize: PRODUCTION,
+		}),
 	],
 };
