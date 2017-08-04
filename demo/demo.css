@@ -28,12 +28,15 @@ main {
       width: 1.5em;
       padding: .3em;
       margin: .2em;
+      background: var(--color);
       color: white;
       font: 150%/1.5 Mavo Icons;
       border-radius: 50%;
       text-align: center; }
       main .links a:hover, main .links a:focus {
+        color: var(--color);
         background: white;
+        box-shadow: 0 0 0 0.2em var(--color);
         text-decoration: none; }
     main .links a.twitter {
       --color: #1da1f2; }
