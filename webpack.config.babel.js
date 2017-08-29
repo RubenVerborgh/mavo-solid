@@ -1,13 +1,13 @@
-const path = require('path');
-const webpack = require('webpack');
+import { resolve } from 'path';
+import MinifyPlugin from 'babel-minify-webpack-plugin';
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
-module.exports = {
+export default {
 	entry: './src/index.js',
 	output: {
 		filename: 'backend.solid.min.js',
-		path: path.resolve(__dirname, 'dist'),
+		path: resolve(__dirname, 'dist'),
 		publicPath: '/live/',
 	},
 	module: {
@@ -39,9 +39,6 @@ module.exports = {
 	},
 	devtool: PRODUCTION ? 'source-map' : 'eval-source-map',
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin({
-			sourceMap: true,
-			minimize: PRODUCTION,
-		}),
+		new MinifyPlugin(),
 	],
 };
