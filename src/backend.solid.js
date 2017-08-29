@@ -1,5 +1,6 @@
 import { Backend } from 'Mavo';
 import * as solid from 'solid-auth-client';
+import * as WacAllow from 'wac-allow';
 import loadProfile from './profile.js';
 
 export default class SolidBackend extends Backend {
@@ -12,7 +13,7 @@ export default class SolidBackend extends Backend {
 		const extension = this.format.constructor.extensions[0] || '.json';
 		this.url = this.source.replace(/\/?$/, `/${this.mavo.id}${extension}`);
 
-		// Allow logging in and reading by default
+		// Allow logging in and assume reading permissions
 		this.permissions.on(['login', 'read']);
 		// Check if the user happens to be logged in
 		this.login(true);
@@ -39,11 +40,17 @@ export default class SolidBackend extends Backend {
 
 	get(url = new URL(this.url)) {
 		const request = solid.fetch(url);
-		request.then(() => {
-			// TODO: Read actual permissions (https://github.com/solid/mavo-solid/issues/3)
-			this.permissions.on(['edit', 'save']);
+		// Determine permissions based on the WAC-Allow header
+		request.then(response => {
+			const { user } = WacAllow.parse(response);
+			// If not readable, revoke assumed read permission
+			if (!user.has('read'))
+				this.permissions.off(['read']);
+			// Set write permissions
+			if (user.has('write'))
+				this.permissions.on(['edit', 'save']);
 		});
-		return this.authorize(request).then(response => response.text());
+		return this.verifyAuthorization(request).then(response => response.text());
 	}
 
 	put(serialized, url = this.url) {
@@ -55,10 +62,11 @@ export default class SolidBackend extends Backend {
 				'Content-Type': 'application/octet-stream',
 			},
 		});
-		return this.authorize(request);
+		return this.verifyAuthorization(request);
 	}
 
-	authorize(request) {
+	// Verifies the status code of the request (should be consistent with WAC-Allow)
+	verifyAuthorization(request) {
 		return request.then(response => {
 			if (response.status === 401 || response.status === 403)
 				throw new Error('Not authorized to perform this action.');

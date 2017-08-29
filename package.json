@@ -26,7 +26,8 @@
   "homepage": "https://github.com/solid/mavo-solid#readme",
   "dependencies": {
     "rdflib": "^0.15.0",
-    "solid-auth-client": "^0.3.4"
+    "solid-auth-client": "^0.3.4",
+    "wac-allow": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
